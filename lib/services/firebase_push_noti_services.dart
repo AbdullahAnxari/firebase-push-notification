@@ -21,6 +21,7 @@ class NotificationServices {
       provisional: false,
       sound: true,
     );
+
     // Handle different authorization statuses
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       debugPrint('User granted permission');
@@ -50,34 +51,35 @@ class NotificationServices {
   // Function to initialize the local notifications plugin
   void initLocalNotification(
       BuildContext context, RemoteMessage message) async {
+    // Android initialization settings using the app's launcher icon
     var androidInitializationSettings =
         const AndroidInitializationSettings('@mipmap/ic_launcher');
-
+    // iOS initialization settings
     var iosInitializationSettings = const DarwinInitializationSettings();
-
+    // Create initialization settings combining Android and iOS settings
     var initializationSetting = InitializationSettings(
       android: androidInitializationSettings,
       iOS: iosInitializationSettings,
     );
-
+    // Initialize the local notifications plugin
     await _flutterLocalNotificationsPlugin.initialize(
       initializationSetting,
+      // Callback triggered when a notification response is received
       onDidReceiveNotificationResponse: (payloud) {
-        handleMessage(context, message);
+        // handleMessage(context, message); // Handle notification response
       },
     );
   }
 
-  // Handle incoming foreground messages
+  // Initialize Firebase Foreground Messaging
   void firebaseInit(BuildContext context) {
+    // Listen for incoming messages
     FirebaseMessaging.onMessage.listen((message) {
       debugPrint('Message: ${message.data.toString()}');
-      debugPrint('Message: ${message.notification!.body.toString()}');
-      debugPrint('Message: ${message.data.toString()}');
-      debugPrint('Message: ${message.data['type'].toString()}');
-      debugPrint('Message: ${message.data['id'].toString()}');
+      // Handle the notification differently for Android and iOS
       if (Platform.isAndroid) {
         initLocalNotification(context, message);
+        debugPrint('platform');
         showNotification(message);
       } else {
         showNotification(message);
@@ -94,6 +96,7 @@ class NotificationServices {
       importance: Importance.max,
     );
 
+    // Create Android notification details
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
       channel.id.toString(),
@@ -121,9 +124,13 @@ class NotificationServices {
     // Ensure notification is displayed immediately
     Future.delayed(Duration.zero, () {
       _flutterLocalNotificationsPlugin.show(
+        //unique ID
         -1,
+        // Set the notification title
         message.data['title'].toString(),
+        // Set the notification body
         message.data['body'].toString(),
+        // Set the notification details
         notificationDetails,
         // Provide a callback function to handle notification tap events:
         // payload: message.data, // Optional payload data
@@ -136,7 +143,7 @@ class NotificationServices {
     });
   }
 
-  //This function is called when the app receives a message while in the foreground
+  //Go to message screen when function is called when the app receives a message while in the foreground
   void handleMessage(BuildContext context, RemoteMessage message) {
     if (message.data['type'] == 'msg') {
       debugPrint('Same as msg');
@@ -148,7 +155,6 @@ class NotificationServices {
           ),
         ),
       );
-      // Get.to(() => const MessageScreen());
     }
   }
 

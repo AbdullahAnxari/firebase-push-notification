@@ -5,28 +5,6 @@ import 'package:http/http.dart' as http;
 
 NotificationServices noti = NotificationServices();
 
-// class HomeView extends GetView<HomeController> {
-//   const HomeView({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: _body,
-//       appBar: AppBar(
-//         title: const Text('Firebase Push Notification'),
-//       ),
-//     );
-//   }
-
-//   Widget get _body => GetBuilder<HomeController>(initState: (state) {
-//         noti.requestNotification();
-//       }, builder: (_) {
-//         return Column(
-//           children: [],
-//         );
-//       });
-// }
-
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
@@ -57,6 +35,7 @@ class _HomeViewState extends State<HomeView> {
           Center(
             child: Column(
               children: [
+                //*
                 ElevatedButton(
                   onPressed: () => GetAccessToken.instance.getAccessToken(),
                   child: const Text('Get Access Tokken'),
@@ -71,7 +50,7 @@ class _HomeViewState extends State<HomeView> {
                       var data = {
                         'to': value
                             .toString(), // Specify the recipient device's FCM token
-                        'priority': 'high',
+                        'priority': 'high', //*ya ni ha
                         'notification': {
                           'title': 'Asif', // Title of the notification
                           'body':
@@ -93,14 +72,17 @@ class _HomeViewState extends State<HomeView> {
                       await http.post(
                           // Define the URI for the FCM API
                           Uri.parse('https://fcm.googleapis.com/fcm/send'),
+                          // Uri.parse('https://fcm.googleapis.com/v1/projects/fir-9e91b/messages:send'),
                           body: jsonEncode(data), // Encode the data as JSON
                           headers: {
                             // Define the headers for the FCM API request
                             'Content-Type': 'application/json: charset=UTF-8',
                             // 'Authorization':
                             //     'ftDFotb4RHubd64tniHSAU:APA91bEd5fC6sqLsG3ZO7TK4vtb45ARQeTcAVaRHgdv6WAsdBYsT2jTweDxlDWhzOFRbgcctvKqojh9OboCdWCgnDXyRA9N_4pevWEC2RxlEtCxY6WaPM3-2pNXUYWeChdiNH-FMpjPs', //TODO Put your key here from cloud messaging api(legacy)
+                            //* yahan server wali key rakh raha   
                             'Auth':
-                                'ftDFotb4RHubd64tniHSAU:APA91bEd5fC6sqLsG3ZO7TK4vtb45ARQeTcAVaRHgdv6WAsdBYsT2jTweDxlDWhzOFRbgcctvKqojh9OboCdWCgnDXyRA9N_4pevWEC2RxlEtCxY6WaPM3-2pNXUYWeChdiNH-FMpjPs', //TODO Put your key here from cloud messaging api(legacy)
+                                'ftDFotb4RHubd64tniHSAU:APA91bEd5fC6sqLsG3ZO7TK4vtb45ARQeTcAVaRHgdv6WAsdBYsT2jTweDxlDWhzOFRbgcctvKqojh9OboCdWCgnDXyRA9N_4pevWEC2RxlEtCxY6WaPM3-2pNXUYWeChdiNH-FMpjPs', 
+                                //TODO Put your key here from cloud messaging api(legacy)
                           }).then((value) {
                         debugPrint('value: $value');
                       }).onError((error, stackTrace) {
@@ -121,3 +103,5 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 }
+
+  //isolates isolate
